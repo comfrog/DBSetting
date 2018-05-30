@@ -1,0 +1,68 @@
+-- coffee
+DROP SCHEMA IF EXISTS coffee;
+
+-- coffee
+CREATE SCHEMA coffee 
+	DEFAULT CHARACTER SET = 'utf8'
+	DEFAULT COLLATE = 'utf8_general_ci';
+
+-- 제품
+CREATE TABLE coffee.product (
+	code  CHAR(4)     NOT NULL COMMENT '코드', -- 코드
+	name  VARCHAR(20) NOT NULL COMMENT '제품명', -- 제품명
+	price INT(11)     NOT NULL COMMENT '제품단가' -- 제품단가
+)
+DEFAULT CHARACTER SET = 'utf8' 
+DEFAULT COLLATE = 'utf8_general_ci' 
+ENGINE = InnoDB 
+COMMENT '제품';
+
+-- 제품
+ALTER TABLE coffee.product 
+	ADD CONSTRAINT
+		PRIMARY KEY (
+			code -- 코드
+		);
+
+-- 판매정보
+CREATE TABLE coffee.sale (
+	no         INT(11) NOT NULL COMMENT '번호', -- 번호
+	code       CHAR(4) NOT NULL COMMENT '제품코드', -- 제품코드
+	saleCnt    INT(11) NOT NULL COMMENT '판매량', -- 판매량
+	marginRate INT(11) NOT NULL COMMENT '마진율' -- 마진율
+)
+DEFAULT CHARACTER SET = 'utf8' 
+DEFAULT COLLATE = 'utf8_general_ci' 
+ENGINE = InnoDB 
+COMMENT '판매정보';
+
+-- 판매정보
+ALTER TABLE coffee.sale 
+	ADD CONSTRAINT
+		PRIMARY KEY (
+			no -- 번호
+		);
+
+ALTER TABLE coffee.sale
+	MODIFY COLUMN no INT(11) NOT NULL AUTO_INCREMENT COMMENT '번호';
+
+ALTER TABLE coffee.sale
+	AUTO_INCREMENT = 5;
+
+-- 판매정보
+ALTER TABLE coffee.sale 
+	ADD CONSTRAINT sale_ibfk_1 -- sale_ibfk_1
+		FOREIGN KEY (
+			code -- 제품코드
+		)
+		REFERENCES coffee.product ( -- 제품
+			code -- 코드
+		)
+		ON DELETE RESTRICT
+		ON UPDATE RESTRICT,
+	ADD INDEX code (
+		code -- 제품코드
+	);
+	
+drop procedure if exists coffee.proc_saledetail_orderby;
+drop procedure if exists coffee.proc_sale_stat
